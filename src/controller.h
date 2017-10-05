@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <string.h>
-#include <cstdlib>
+#include <time.h>
+#include <signal.h>
 #include <iostream>
+
 /* Use glew.h instead of gl.h to get all the GL prototypes declared */
 #include <GL/glew.h>
 /* Using SDL2 for the base window and OpenGL context init */
 #include <SDL.h>
-#include <fstream>
-
+// global constants
 #include "globals.h"
+
 using namespace std;
 typedef struct {
 	float* array;

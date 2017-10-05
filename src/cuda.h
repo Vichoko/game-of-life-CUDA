@@ -9,7 +9,8 @@
 /** cpp interface **/
 int* init_game_data();
 
-int* kernel_wrapper(); // call every frame
+float kernel_wrapper(); // call every frame
+int* fetch_gpu_data(); // call every frame
 
 void free_resources();
 void free_cuda_resources();

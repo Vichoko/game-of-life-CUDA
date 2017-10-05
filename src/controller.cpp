@@ -1,9 +1,9 @@
 //============================================================================
-// Name        : CPU.cpp
+// Name        : controller.cpp
 // Author      : Vicente Oyanedel Muñoz
-// Version     : 2.7
-// Copyright   : Copyright (c) 2017
-// Description : Game of life sequentially implemented, using C and OpenGL.
+// Version     : 1.8
+// Copyright   : MIT (c) 2017
+// Description : Game of life parallely implemented, using CUDA, C and OpenGL.
 //============================================================================
 
 #include "controller.h"
@@ -20,6 +20,10 @@ GLint attribute_color;
 
 // vertices + colores
 container_t* vertex_n_colors;
+
+// metricas
+unsigned int iteration_counter = 0;
+double seconds_of_process = 0;
 
 int win_width = WIDTH;
 int win_height = HEIGHT;
@@ -268,8 +272,12 @@ void mainLoop(SDL_Window* window) {
 			if (ev.type == SDL_QUIT)
 				return;
 		}
-		render(window); // transfer the life information to GPU
-		livesArray = kernel_wrapper();
+		render(window); // transfer previous life information to GPU for display and draw
+		float milliseconds = kernel_wrapper(); // blocks until gpu finishes proccesing kernel
+		livesArray = fetch_gpu_data(); // transfer new life information to CPU
+		
+		seconds_of_process += milliseconds/1000;
+		iteration_counter++;
 	}
 }
 /**
@@ -289,7 +297,7 @@ SDL_Window* init_display_stuff() {
 	GLenum glew_status = glewInit();
 	if (glew_status != GLEW_OK) {
 		cerr << "Error: glewInit: " << glewGetErrorString(glew_status) << endl;
-		//return EXIT_FAILURE;
+		exit(-2);
 	}
 
 	/* When all init functions run without errors,
@@ -297,15 +305,25 @@ SDL_Window* init_display_stuff() {
 	if (!init_resources()) {
 		cerr << "Error: init_resources: " << glewGetErrorString(glew_status)
 				<< endl;
+		exit(-3);
 
 	}
-	//return EXIT_FAILURE;
-	// end display
 	return window;
 
 }
-
+void intHandler(int dummy) {
+	float res = ((iteration_counter*1.0)/seconds_of_process)*COLUMNS*ROWS;
+	printf("\n///////////////// ESTADISTICAS /////////////////////\n");
+	printf("- Celulas evaluadas: %d celulas\n", iteration_counter*COLUMNS*ROWS);
+	printf("- Segundos evaluando celulas: %f segundos\n", seconds_of_process);
+	printf("- Celulas evaluadas por segundo: %.f celulas/segundos\n", res);
+	printf("- Tamano de grilla: %d celdas (%d x %d)\n", COLUMNS*ROWS, COLUMNS, ROWS);
+	printf("HASTA PRONTO!\n");
+	free_resources();
+	exit(1);
+}
 int main() {
+    signal(SIGINT, intHandler);
 	/** INICIA DATOS DEL JUEGO **/
 	livesArray = init_game_data();
 	/** INICIA DISPLAY **/

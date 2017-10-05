@@ -140,18 +140,33 @@ __global__ void refreshLife(int* livesArrayActual, int* livesArrayNext) {
 	}
 }
 
-int* kernel_wrapper(){
+/** 
+* Ejecuta kernel y retorna tiempo (en ms) total de procesamiento del kernel.
+**/
+float kernel_wrapper(){
+	cudaEvent_t start, stop;
+	cudaEventCreate(&start);
+	cudaEventCreate(&stop);
 	cudaError_t code = cudaSuccess;
 
+	cudaEventRecord(start);
 	refreshLife<<<(N + THREADS_PER_BLOCK-1)/THREADS_PER_BLOCK,THREADS_PER_BLOCK>>>(d_livesArrayActual, d_livesArrayNext);
-
+	cudaEventRecord(stop);
+	cudaEventSynchronize(stop);
+	float milliseconds = 0;
+	cudaEventElapsedTime(&milliseconds, start, stop);
+	// error check
 	code = cudaGetLastError();
 	if (code != cudaSuccess){
 		printf("error kernel refreshLife %s\n",  cudaGetErrorString(code));
+		exit(-1);
 	}
-	cudaMemcpy(livesArrayActual, d_livesArrayNext, size, cudaMemcpyDeviceToHost);
+	return milliseconds;
+}
 
-	code = cudaSuccess;
+int* fetch_gpu_data(){
+	cudaError_t code = cudaSuccess;
+	cudaMemcpy(livesArrayActual, d_livesArrayNext, size, cudaMemcpyDeviceToHost);
 	code = cudaGetLastError();
 	if (code != cudaSuccess){
 		printf("error copying livesArrayActual %s\n",  cudaGetErrorString(code));

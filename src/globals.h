@@ -1,7 +1,7 @@
 #define WIDTH 800
 #define HEIGHT 800
-#define ROWS 128
-#define COLUMNS 128
+#define ROWS 64
+#define COLUMNS 64
 #define FRAMERATE 150
 #define INITIAL_LIVES_FRACTION 0.9
 
