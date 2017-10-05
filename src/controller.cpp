@@ -162,10 +162,10 @@ bool init_resources(void) {
 	/** SHADER COMPILATION & LINK**/
 	GLint compile_ok = GL_FALSE, link_ok = GL_FALSE;
 	GLuint vs, fs;
-	if ((vs = create_shader("shaders/gameoflife.v.glsl", GL_VERTEX_SHADER))
+	if ((vs = create_shader("src/shaders/gameoflife.v.glsl", GL_VERTEX_SHADER))
 			== 0)
 		return false;
-	if ((fs = create_shader("shaders/gameoflife.f.glsl", GL_FRAGMENT_SHADER))
+	if ((fs = create_shader("src/shaders/gameoflife.f.glsl", GL_FRAGMENT_SHADER))
 			== 0)
 		return false;
 
