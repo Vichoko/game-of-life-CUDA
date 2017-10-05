@@ -1,5 +1,6 @@
-in vec3 ourColor;
+#version 120
 
+varying vec3 ourColor;
 
 void main(void) {        
   gl_FragColor[0] = ourColor.x;
