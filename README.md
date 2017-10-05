@@ -8,6 +8,7 @@ Game of Life in CUDA, displayed using C++ and OpenGL.
 
 ### Instalar dependencias (Linux)
 Si tira errores al compilar:
+
 **Instalar librerías**
 ```
 // GLEW, SDL2 (+SDL2_Image)
@@ -45,6 +46,7 @@ Si tienes problemas con los include, hay que configurar:
 ```
 $ ./controller
 ```
+Al precionar ```CTRL+C``` la aplicación terinará y mostrará estadísticas de cantidad de celulas evaluadas por segundo, y más.
 
 ## Customización
 Se pueden modificar constantes en "src/globals.h".
