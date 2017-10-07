@@ -1,5 +1,5 @@
-#define WIDTH 1024
-#define HEIGHT 1024
+#define WIDTH 800
+#define HEIGHT 800
 #define ROWS 128
 #define COLUMNS 128
 #define FRAMERATE 150
